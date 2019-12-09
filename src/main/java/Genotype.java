@@ -7,23 +7,19 @@ public class Genotype {
     private Random generator = new Random ();
 
 
-    private Genotype () {
-        this.genotypeArray = generateNewAnimal();
+    private Genotype (ArrayList<Integer> list) {
+        this.genotypeArray = list;
     }
 
-    private Genotype (Genotype firstParent, Genotype secondParent) {
-        this.genotypeArray =  generateNewChild(firstParent, secondParent);
-    }
-
-    public ArrayList generateNewChild (Genotype firstParent, Genotype secondParent){
+    public void generateNewChild (Genotype firstParent, Genotype secondParent){
         ArrayList<Integer> childGenotype = new ArrayList<>();
         int firstIndex = 0;
         while (firstIndex == 0){
-            firstIndex = generator.nextInt(30);
+            firstIndex = generator.nextInt(31;
         }
         int secondIndex = firstIndex;
         while (secondIndex == firstIndex && secondIndex == 0){
-            secondIndex = generator.nextInt(30);
+            secondIndex = generator.nextInt(31;
         }
         for (int i=0; i<firstIndex; i++) {
             childGenotype.add(firstParent.genotypeArray.get(i));
@@ -42,23 +38,25 @@ public class Genotype {
             childGenotype = allDirection(childGenotype);
         }
 
-        return childGenotype;
+        new Genotype(childGenotype);
     }
 
-    public ArrayList<Integer> generateNewAnimal () {
+    public void generateNewAnimal () {
         ArrayList<Integer> newGenotype = new ArrayList<>();
         for (int i=0; i<8; i++) {
             newGenotype.add(i);
         }
         for (int i=0; i<24; i++){
-            newGenotype.add(generator.nextInt(7));
+            newGenotype.add(generator.nextInt(8;
         }
         Collections.sort(newGenotype);
-        return newGenotype;
+
+        new Genotype(newGenotype);
+
     }
 
     public int findRotation () {
-        return genotypeArray.get(generator.nextInt(31));
+        return genotypeArray.get(generator.nextInt(32);
     }
 
     private boolean areAllDirections (ArrayList<Integer> list){
@@ -93,8 +91,4 @@ public class Genotype {
 
         return newDirections;
     }
-
-
-
-
 }
