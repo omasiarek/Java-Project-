@@ -4,31 +4,26 @@ import java.util.Random;
 
 public class Genotype {
     private ArrayList<Integer> genotypeArray;
-    private Random generator = new Random ();
+    private static Random generator = new Random ();
 
 
     private Genotype (ArrayList<Integer> list) {
         this.genotypeArray = list;
     }
 
-    public void generateNewChild (Genotype firstParent, Genotype secondParent){
+    public Genotype generateNewChild (Genotype otherParent){
         ArrayList<Integer> childGenotype = new ArrayList<>();
-        int firstIndex = 0;
-        while (firstIndex == 0){
-            firstIndex = generator.nextInt(31;
-        }
-        int secondIndex = firstIndex;
-        while (secondIndex == firstIndex && secondIndex == 0){
-            secondIndex = generator.nextInt(31;
-        }
+        int firstIndex = 1 + generator.nextInt(30);
+        int secondIndex = firstIndex + 1 + generator.nextInt(31-firstIndex);
+
         for (int i=0; i<firstIndex; i++) {
-            childGenotype.add(firstParent.genotypeArray.get(i));
+            childGenotype.add(this.genotypeArray.get(i));
         }
         for (int i=firstIndex; i<secondIndex; i++) {
-            childGenotype.add(secondParent.genotypeArray.get(i));
+            childGenotype.add(otherParent.genotypeArray.get(i));
         }
         for (int i=secondIndex; i<32; i++) {
-            childGenotype.add(firstParent.genotypeArray.get(i));
+            childGenotype.add(this.genotypeArray.get(i));
         }
 
         if (areAllDirections(childGenotype)){
@@ -38,16 +33,16 @@ public class Genotype {
             childGenotype = allDirection(childGenotype);
         }
 
-        new Genotype(childGenotype);
+        return new Genotype(childGenotype);
     }
 
-    public void generateNewAnimal () {
+    public static void generateNewGenotype () {
         ArrayList<Integer> newGenotype = new ArrayList<>();
         for (int i=0; i<8; i++) {
             newGenotype.add(i);
         }
         for (int i=0; i<24; i++){
-            newGenotype.add(generator.nextInt(8;
+            newGenotype.add(generator.nextInt(8));
         }
         Collections.sort(newGenotype);
 
@@ -75,9 +70,9 @@ public class Genotype {
 
         for (int i=0; i<8; i++){
             if (direction[i] == 0) {
-                int position = generator.nextInt(7);
+                int position = generator.nextInt(8);
                 while (direction[position]==0 || direction[position]==1) {
-                    position = generator.nextInt(7);
+                    position = generator.nextInt(8);
                 }
                 direction[position]--;
                 direction[i]++;
