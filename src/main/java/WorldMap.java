@@ -57,7 +57,16 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver{
         return true;
     }
 
-
+    public List<Animal> getAnimals(){
+        List<Animal> animals = new ArrayList<>();
+        for (List<IMapElement> elements: map.values()) {
+            for (IMapElement element: elements) {
+                if (element instanceof Animal)
+                    animals.add((Animal) element);
+            }
+        }
+        return animals;
+    }
 
     public void run(int directions) {
         return;
