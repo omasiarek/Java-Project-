@@ -4,17 +4,17 @@ import java.util.Random;
 
 public class Genotype {
     private ArrayList<Integer> genotypeArray;
-    private static Random generator = new Random ();
+    private static Random GENERATOR = new Random ();
 
 
     private Genotype (ArrayList<Integer> list) {
         this.genotypeArray = list;
     }
 
-    public Genotype generateNewChild (Genotype otherParent){
+    public Genotype generateNewGenotype (Genotype otherParent){
         ArrayList<Integer> childGenotype = new ArrayList<>();
-        int firstIndex = 1 + generator.nextInt(30);
-        int secondIndex = firstIndex + 1 + generator.nextInt(31-firstIndex);
+        int firstIndex = 1 + GENERATOR.nextInt(30);
+        int secondIndex = firstIndex + 1 + GENERATOR.nextInt(31-firstIndex);
 
         for (int i=0; i<firstIndex; i++) {
             childGenotype.add(this.genotypeArray.get(i));
@@ -36,22 +36,22 @@ public class Genotype {
         return new Genotype(childGenotype);
     }
 
-    public static void generateNewGenotype () {
+    public static Genotype generateNewGenotype () {
         ArrayList<Integer> newGenotype = new ArrayList<>();
         for (int i=0; i<8; i++) {
             newGenotype.add(i);
         }
         for (int i=0; i<24; i++){
-            newGenotype.add(generator.nextInt(8));
+            newGenotype.add(GENERATOR.nextInt(8));
         }
         Collections.sort(newGenotype);
 
-        new Genotype(newGenotype);
+        return new Genotype(newGenotype);
 
     }
 
     public int findRotation () {
-        return genotypeArray.get(generator.nextInt(32);
+        return genotypeArray.get(GENERATOR.nextInt(32));
     }
 
     private boolean areAllDirections (ArrayList<Integer> list){
@@ -70,9 +70,9 @@ public class Genotype {
 
         for (int i=0; i<8; i++){
             if (direction[i] == 0) {
-                int position = generator.nextInt(8);
+                int position = GENERATOR.nextInt(8);
                 while (direction[position]==0 || direction[position]==1) {
-                    position = generator.nextInt(8);
+                    position = GENERATOR.nextInt(8);
                 }
                 direction[position]--;
                 direction[i]++;
@@ -83,7 +83,6 @@ public class Genotype {
             for (int j=0; j<direction[i]; j++)
                 newDirections.add(i);
         }
-
         return newDirections;
     }
 }
