@@ -5,7 +5,7 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver{
     int width;
     public Map<Vector2d, List<IMapElement>> map;
 
-    public WorldMap(int height, int width) {
+    public WorldMap(int width, int height) {
         this.map = new LinkedHashMap<>();
         this.height = height;
         this.width = width;
@@ -66,6 +66,27 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver{
             }
         }
         return animals;
+    }
+
+    public Vector2d getDimension() {
+        return new Vector2d (this.width, this.height);
+    }
+
+    public List<Animal> getAnimalsPerField(Vector2d vector) {
+        List<Animal> animals = new ArrayList<>();
+        for (IMapElement element: map.get(vector)){
+            if (element instanceof Animal)
+                animals.add((Animal) element);
+        }
+        return animals;
+    }
+
+    public boolean isPlantAtField (Vector2d vector) {
+        for(IMapElement element: map.get(vector)){
+            if (element instanceof Plant)
+                return true;
+        }
+        return false;
     }
 
     public void run(int directions) {
