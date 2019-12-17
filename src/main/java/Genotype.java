@@ -85,4 +85,9 @@ public class Genotype {
         }
         return newDirections;
     }
+
+    @Override
+    public String toString() {
+        return genotypeArray.toString();
+    }
 }

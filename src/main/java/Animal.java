@@ -2,22 +2,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import static java.lang.Math.ceil;
+import static java.lang.Math.floor;
+
 
 public class Animal implements IMapElement, Comparable<Animal>{
     private MapDirection direction;
     private Vector2d position;
-    private IWorldMap map;
+    private WorldMap map;
     private List<IPositionChangeObserver> observers;
     private int energy;
     private int energyToMultiplication;
+    private int energyToMove;
     private Genotype genotype;
     private static Random GENERATOR = new Random();
     private static OptionsParser PARSER = new OptionsParser();
 
 
 
-    public Animal(IWorldMap map, Vector2d position, int energyToMultiplication){
+    public Animal(WorldMap map, Vector2d position, int energyToMultiplication){
         direction = new OptionsParser().parseToMapDirection(GENERATOR.nextInt(8));
         this.position = position;
         this.map = map;
@@ -27,7 +29,7 @@ public class Animal implements IMapElement, Comparable<Animal>{
         this.genotype=Genotype.generateNewGenotype();
     }
 
-    public Animal (IWorldMap map, Vector2d position, int energyToMultiplication, int energy, Genotype firstParent, Genotype secondParent){
+    public Animal (WorldMap map, Vector2d position, int energyToMultiplication, int energy, Genotype firstParent, Genotype secondParent){
         this(map, position, energyToMultiplication);
         this.energy = energy;
         this.genotype = firstParent.generateNewGenotype(secondParent);
@@ -40,34 +42,29 @@ public class Animal implements IMapElement, Comparable<Animal>{
         currentDirection += direction;
         currentDirection %= 8;
         this.direction = PARSER.parseToMapDirection(currentDirection);
+        map.removeElement(this);
         this.position = map.placeAtMap(this.position.add(this.direction.toUnitVector()));
+        map.addElement(this);
+        this.energy -= energyToMove;
     }
 
-    public Vector2d childPosition (Vector2d vector){
-        for (int i=0; i<=7; i++){
-            Vector2d childVector = vector.add(PARSER.parseToMapDirection(i).toUnitVector());
-            if (!map.isOccupied(childVector)){
-                return childVector;
-            }
-        }
-        return null;
-    }
 
     public int quaterEnergy (int energy){
         double energyDouble = (double) energy;
-        energy = (int)ceil(energyDouble/4);
+        energy = (int)floor(energyDouble/4);
         return energy;
     }
 
-    public Animal multiplication (Animal otherAnimal) {
-        Vector2d childVector = childPosition(this.position);
-        if (childVector == null)
-            return null;
+    public Animal multiplication (Animal otherAnimal, Vector2d childVector) {
         int childEnergy = quaterEnergy(this.energy) + quaterEnergy(otherAnimal.energy);
         this.energy -= quaterEnergy(this.energy);
         otherAnimal.energy -= quaterEnergy(otherAnimal.energy);
         return new Animal (this.map, childVector, this.energyToMultiplication, childEnergy, this.genotype, otherAnimal.genotype);
 
+    }
+
+    public boolean isCorrectEnergyToMultiplication () {
+        return this.energy >= this.energyToMultiplication;
     }
 
     @Override
@@ -99,6 +96,10 @@ public class Animal implements IMapElement, Comparable<Animal>{
 
     public boolean isAlive () {
         return this.energy > 0;
+    }
+
+    public int getEnergy() {
+        return energy;
     }
 
     @Override

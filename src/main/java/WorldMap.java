@@ -1,117 +1,121 @@
 import java.util.*;
 
-public class WorldMap implements IWorldMap, IPositionChangeObserver{
-    int height;
-    int width;
-    public Map<Vector2d, List<IMapElement>> map;
+public class WorldMap {
+    private int height;
+    private int width;
+    private Map<Vector2d, List<IMapElement>> map;
+    private static OptionsParser PARSER = new OptionsParser();
+    private List<Vector2d> freePlaceAtDesert;
+    private List<Vector2d> freePlaceAtJungle;
+    private Jungle jungle;
 
-    public WorldMap(int width, int height) {
+    public WorldMap(int width, int height, double percentOfJungle) {
         this.map = new LinkedHashMap<>();
         this.height = height;
         this.width = width;
+        this.jungle = new Jungle(width, height, percentOfJungle);
+        this.initializeList();
     }
 
-
-    public void addElement (IMapElement element) {
-        if (map.containsKey(element.getPosition())){
-            map.get(element.getPosition()).add(element);
+    private void initializeList() {
+        this.freePlaceAtJungle = new LinkedList<>();
+        this.freePlaceAtDesert = new LinkedList<>();
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Vector2d vector = new Vector2d(x, y);
+                if (jungle.isInJungle(vector)) {
+                    freePlaceAtJungle.add(vector);
+                } else {
+                    freePlaceAtDesert.add(vector);
+                }
+            }
         }
-        else {
+    }
+
+    public void addElement(IMapElement element) {
+        if (map.containsKey(element.getPosition())) {
+            map.get(element.getPosition()).add(element);
+        } else {
             List<IMapElement> list = new ArrayList<>();
             list.add(element);
             map.put(element.getPosition(), list);
         }
+        freePlaceAtDesert.remove(element.getPosition());
+        freePlaceAtJungle.remove(element.getPosition());
     }
 
-    public boolean isOccupied (Vector2d vector){
-        if (map.containsKey(vector))
-            return true;
-        return false;
+    private boolean isOccupied(Vector2d vector) {
+        return map.containsKey(vector);
     }
 
     public void removeElement(IMapElement element) {
         List<IMapElement> elements = map.get(element.getPosition());
         elements.remove(element);
-    }
-
-    public boolean place(Animal animal) {
-        return false;
-    }
-
-    public boolean isNewChild (Vector2d vector) {                       //TODO split logic of multiplication
-        if (!map.containsKey(vector) || map.get(vector).size() < 2)
-            return false;
-        List<Animal> elements = new ArrayList<>();
-        for (IMapElement element : map.get(vector)) {
-            if ((element instanceof Animal)){
-                elements.add((Animal) element);
-            }
+        if (elements.isEmpty()) {
+            if (jungle.isInJungle(element.getPosition()))
+                freePlaceAtJungle.add(element.getPosition());
+            else
+                freePlaceAtDesert.add(element.getPosition());
+            map.remove(element.getPosition());
         }
-        if (elements.size() < 2)
-            return false;
-        Collections.sort(elements);
-        Animal firstParent = elements.get(0);
-        Animal secondParent = elements.get(1);
-        Animal child = firstParent.multiplication(secondParent);
-        addElement(child);
-        return true;
     }
 
-    public List<Animal> getAnimals(){
+    public List<Animal> getAnimals() {
         List<Animal> animals = new ArrayList<>();
-        for (List<IMapElement> elements: map.values()) {
-            for (IMapElement element: elements) {
-                if (element instanceof Animal)
-                    animals.add((Animal) element);
-            }
+        for (Vector2d vector2d : map.keySet()) {
+            animals.addAll(getAnimalsPerField(vector2d));
         }
         return animals;
     }
 
-    public Vector2d getDimension() {
-        return new Vector2d (this.width, this.height);
-    }
-
     public List<Animal> getAnimalsPerField(Vector2d vector) {
         List<Animal> animals = new ArrayList<>();
-        for (IMapElement element: map.get(vector)){
+        for (IMapElement element : map.get(vector)) {
             if (element instanceof Animal)
                 animals.add((Animal) element);
         }
         return animals;
     }
 
-    public boolean isPlantAtField (Vector2d vector) {
-        for(IMapElement element: map.get(vector)){
-            if (element instanceof Plant)
-                return true;
+    public Vector2d placeForChild(Vector2d vector) {
+        for (int i = 0; i <= 7; i++) {
+            Vector2d childVector = vector.add(PARSER.parseToMapDirection(i).toUnitVector());
+            childVector = this.placeAtMap(childVector);
+            if (!this.isOccupied(childVector)) {
+                return childVector;
+            }
         }
-        return false;
-    }
-
-    public void run(int directions) {
-        return;
-    }
-
-    public Object objectAt (Vector2d vector) {
         return null;
     }
 
-    public void positionChanged (Vector2d oldPosition, Vector2d newPosition) {}
-
-
+    public List<Plant> getPlants() {
+        List<Plant> plants = new ArrayList<>();
+        for (List<IMapElement> elements : map.values()) {
+            for (IMapElement element : elements) {
+                if (element instanceof Plant)
+                    plants.add((Plant) element);
+            }
+        }
+        return plants;
+    }
 
     public Vector2d placeAtMap(Vector2d vector) {
-        if (vector.x < width && vector.x >= 0 && vector.y < height && vector.y >=0)
+        if (vector.x < width && vector.x >= 0 && vector.y < height && vector.y >= 0)
             return vector;
         int x = vector.x % width;
         int y = vector.y % height;
-        return new Vector2d (x, y);
+        return new Vector2d(x, y);
     }
 
-    public boolean canMoveTo(Vector2d vector) {
-        return false;
+    public Set<Vector2d> getOccupatedFields() {
+        return map.keySet();
     }
 
+    public List<Vector2d> getFreePlaceAtDesert() {
+        return freePlaceAtDesert;
+    }
 
+    public List<Vector2d> getFreePlaceAtJungle() {
+        return freePlaceAtJungle;
+    }
 }
