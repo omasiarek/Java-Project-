@@ -8,11 +8,10 @@ public class Animal implements IMapElement, Comparable<Animal> {
     private static int ENERGYTOMULTIPLICATION = 10;
     private static int ENERGYTOMOVE = 10;
     private Genotype genotype;
-    private static OptionsParser PARSER = new OptionsParser();
 
 
     public Animal(WorldMap map, Vector2d position, int energy) {
-        direction = new OptionsParser().parseToMapDirection(Generator.GENERATOR.nextInt(8));
+        direction = MapDirection.parseToMapDirection(Generator.GENERATOR.nextInt(8));
         this.position = position;
         this.map = map;
         this.energy = energy;
@@ -27,10 +26,10 @@ public class Animal implements IMapElement, Comparable<Animal> {
 
     public void move() {
         int direction = this.genotype.findRotation();
-        int currentDirection = PARSER.parseToInt(this.direction);
+        int currentDirection = this.direction.toInt();
         currentDirection += direction;
         currentDirection %= 8;
-        this.direction = PARSER.parseToMapDirection(currentDirection);
+        this.direction = MapDirection.parseToMapDirection(currentDirection);
         map.removeElement(this);
         this.position = map.placeAtMap(this.position.add(this.direction.toUnitVector()));
         map.addElement(this);

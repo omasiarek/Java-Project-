@@ -1,14 +1,14 @@
 import java.util.Collections;
 import java.util.List;
 
-import static java.lang.Math.floor;
-
 
 public class Era {
     private WorldMap map;
+    private int counterOfDays;
 
     public Era(WorldMap map) {
         this.map = map;
+        this.counterOfDays = 1;
     }
 
     public void deleteDeathAnimals() {
@@ -75,5 +75,14 @@ public class Era {
             Plant plant = new Plant(jungle.get(index));
             map.addElement(plant);
         }
+    }
+
+    public void oneDay () {
+        this.deleteDeathAnimals();
+        this.movingAnimal();
+        this.eating();
+        this.multiplication();
+        this.putPlants();
+        counterOfDays++;
     }
 }

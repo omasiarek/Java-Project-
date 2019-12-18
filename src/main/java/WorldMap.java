@@ -4,7 +4,6 @@ public class WorldMap {
     private int height;
     private int width;
     private Map<Vector2d, List<IMapElement>> map;
-    private static OptionsParser PARSER = new OptionsParser();
     private List<Vector2d> freePlaceAtDesert;
     private List<Vector2d> freePlaceAtJungle;
     private Jungle jungle;
@@ -81,7 +80,7 @@ public class WorldMap {
     public Vector2d placeForChild(Vector2d vector) {
         List<Vector2d> places = new LinkedList<>();
         for (int i = 0; i <= 7; i++) {
-            Vector2d childVector = vector.add(PARSER.parseToMapDirection(i).toUnitVector());
+            Vector2d childVector = vector.add(MapDirection.parseToMapDirection(i).toUnitVector());
             childVector = this.placeAtMap(childVector);
             if (!this.isOccupied(childVector)) {
                 places.add(childVector);
