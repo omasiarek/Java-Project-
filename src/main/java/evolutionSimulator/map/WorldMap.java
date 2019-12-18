@@ -138,6 +138,13 @@ public class WorldMap {
         return freePlaceAtJungle;
     }
 
+    public List<Vector2d> getFreePlaceAtMap() {
+        List<Vector2d> freePlaceAtMap = new LinkedList<>();
+        freePlaceAtMap.addAll(freePlaceAtDesert);
+        freePlaceAtMap.addAll(freePlaceAtJungle);
+        return freePlaceAtMap;
+    }
+
     public Vector2d getDimension() {
         return new Vector2d(this.width, this.height);
     }

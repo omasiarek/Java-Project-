@@ -10,8 +10,6 @@ public class Animal implements IMapElement, Comparable<Animal> {
     private Vector2d position;
     private WorldMap map;
     private int energy;
-    private static int ENERGYTOMULTIPLICATION = 10;
-    private static int ENERGYTOMOVE = 2;
     private Genotype genotype;
 
 
@@ -29,7 +27,7 @@ public class Animal implements IMapElement, Comparable<Animal> {
     }
 
 
-    public void move() {
+    public void move(int moveEnergy) {
         int direction = this.genotype.findRotation();
         int currentDirection = this.direction.toInt();
         currentDirection += direction;
@@ -38,7 +36,7 @@ public class Animal implements IMapElement, Comparable<Animal> {
         map.removeElement(this);
         this.position = map.placeAtMap(this.position.add(this.direction.toUnitVector()));
         map.addElement(this);
-        this.energy -= Animal.ENERGYTOMOVE;
+        this.energy -= moveEnergy;
     }
 
 
@@ -53,10 +51,6 @@ public class Animal implements IMapElement, Comparable<Animal> {
         Genotype genotype = this.genotype.generateNewGenotype(otherAnimal.genotype);
         return new Animal(this.map, childVector, childEnergy, genotype);
 
-    }
-
-    public boolean isCorrectEnergyToMultiplication() {
-        return this.energy >= Animal.ENERGYTOMULTIPLICATION;
     }
 
     @Override

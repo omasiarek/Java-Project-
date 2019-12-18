@@ -10,17 +10,21 @@ import java.util.List;
 
 
 public class Simulation {
+    private final SimulationConfig config;
     private WorldMap map;
     private int counterOfDays;
 
-    public Simulation() {
-        this.map = new WorldMap(25, 50, 0.2);
+    public Simulation(SimulationConfig config) {
+        this.config = config;
+        this.map = new WorldMap(config.width, config.height, config.jungleRatio);
         this.counterOfDays = 1;
 
-        this.map.addElement(new Animal(this.map, new Vector2d(1, 1), 40));
-        this.map.addElement(new Animal(this.map, new Vector2d(4, 4), 40));
-        this.map.addElement(new Animal(this.map, new Vector2d(5, 4), 40));
-        this.map.addElement(new Animal(this.map, new Vector2d(10, 11), 40));
+        for (int i = 0; i < config.initialAnimals; i++) {
+            List<Vector2d> freePositions = map.getFreePlaceAtMap();
+            Vector2d position = freePositions.get(Generator.GENERATOR.nextInt(freePositions.size()));
+            Animal animal = new Animal(this.map, position, config.startEnergy);
+            this.map.addElement(animal);
+        }
     }
 
     public void deleteDeathAnimals() {
@@ -34,7 +38,7 @@ public class Simulation {
     public void movingAnimal() {
         List<Animal> animals = map.getAnimals();
         for (Animal animal : animals) {
-            animal.move();
+            animal.move(this.config.moveEnergy);
         }
     }
 
@@ -48,10 +52,11 @@ public class Simulation {
                 while (i<animals.size() && animals.get(i).getEnergy() == animals.get(0).getEnergy()) {
                     i++;
                 }
-                int energy = Plant.ENERGY / i;
+                int energy = this.config.plantEnergy / i;
                 for (int j = 0; j < i; j++) {
                     animals.get(j).addEnergy(energy);
                 }
+                this.map.removeElement(plant);
             }
         }
     }
@@ -67,7 +72,8 @@ public class Simulation {
             Collections.sort(animals);
             Animal firstParent = animals.get(0);
             Animal secondParent = animals.get(1);
-            if(firstParent.isCorrectEnergyToMultiplication() && secondParent.isCorrectEnergyToMultiplication()){
+            int multiplicationEnergy = this.config.startEnergy / 2;
+            if(firstParent.getEnergy() > multiplicationEnergy && secondParent.getEnergy() > multiplicationEnergy){
                 Animal child = firstParent.multiplication(secondParent, childVector);
                 map.addElement(child);
             }
