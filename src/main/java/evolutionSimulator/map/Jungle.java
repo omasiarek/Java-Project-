@@ -12,7 +12,7 @@ public class Jungle {
         int x = (int) ceil(width * percent / 2.0);
         int y = (int) ceil(height * percent / 2.0);
         this.lowerLeft = new Vector2d(width / 2 - x, height / 2 - y);
-        this.upperRight = new Vector2d(width / 2 + x, height / 2 - y);
+        this.upperRight = new Vector2d(width / 2 + x, height / 2 + y);
     }
 
     public boolean isInJungle(Vector2d vector) {
