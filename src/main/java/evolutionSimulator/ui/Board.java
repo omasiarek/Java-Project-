@@ -12,12 +12,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Board extends JPanel {
+public class Board extends JPanel implements IUpdatable {
     WorldMap map;
     Map<Vector2d, JLabel> labelByPosition = new LinkedHashMap<>();
 
-    public Board(WorldMap map) {
-        this.map = map;
+    public Board(SimulationController controller) {
+        controller.addListener(this);
+        this.map = controller.getMap();
         Vector2d dimension = map.getDimension();
         this.setLayout(new GridLayout(dimension.y, dimension.x));
         for (int y = 0; y < dimension.y; y++) {
