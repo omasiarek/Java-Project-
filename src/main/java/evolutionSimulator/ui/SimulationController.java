@@ -5,6 +5,10 @@ import evolutionSimulator.SimulationConfig;
 import evolutionSimulator.map.WorldMap;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,5 +61,11 @@ public class SimulationController {
             simulation.oneDay();
         }
         this.updateListeners();
+    }
+
+    public void exportToFile(File file) throws IOException {
+        try (Writer writer = new FileWriter(file)) {
+            writer.write(this.simulation.exportStatistics());
+        }
     }
 }

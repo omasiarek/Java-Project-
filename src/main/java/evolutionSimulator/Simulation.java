@@ -118,7 +118,7 @@ public class Simulation {
         this.statistics.add(this.dailyStatistic());
     }
 
-    public Statistic dailyStatistic () {
+    public Statistic dailyStatistic() {
         int animals = map.getAnimals().size();
         int plants = map.getPlants().size();
         int avgCurrentEnergy = (int) Math.round(
@@ -141,6 +141,42 @@ public class Simulation {
                 .map(genotypeWithCount -> genotypeWithCount.getKey())
                 .orElse(null);
         return new Statistic(animals, plants, genotype, avgLifeTime, avgCurrentEnergy, children);
+    }
+
+    public String exportStatistics() {
+        if (this.statistics.isEmpty()) return "";
+
+        int avgAnimals = (int) Math.round(
+                this.statistics.stream()
+                        .collect(Collectors.averagingInt(statistic -> statistic.counterAnimals))
+        );
+        int avgPlants = (int) Math.round(
+                this.statistics.stream()
+                        .collect(Collectors.averagingInt(statistic -> statistic.counterPlants))
+        );
+        int avgLifeTime = (int) Math.round(
+                this.statistics.stream()
+                        .collect(Collectors.averagingInt(statistic -> statistic.avgLifeTime))
+        );
+        int avgEnergy = (int) Math.round(
+                this.statistics.stream()
+                        .collect(Collectors.averagingInt(statistic -> statistic.avgCurrentEnergy))
+        );
+        int avgChildren = (int) Math.round(
+                this.statistics.stream()
+                        .collect(Collectors.averagingInt(statistic -> statistic.avgChildren))
+        );
+        Genotype genotype = this.statistics.get(this.statistics.size() - 1).genotype;
+        return String.format(
+                "Total days: %d\nAverage animals: %d\nAverage plants: %d\nAverage lifetime: %d\nAverage energy: %d\nAverage children: %d\nFinal dominant genome: %s\n",
+                this.counterOfDays,
+                avgAnimals,
+                avgPlants,
+                avgLifeTime,
+                avgEnergy,
+                avgChildren,
+                genotype
+        );
     }
 
     public WorldMap getMap() {
