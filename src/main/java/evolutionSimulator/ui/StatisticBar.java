@@ -7,6 +7,7 @@ import java.awt.*;
 
 public class StatisticBar extends JToolBar implements IUpdatable {
     private SimulationController controller;
+    private JLabel daysLabel;
     private JLabel animalsLabel;
     private JLabel plantsLabel;
     private JLabel avgLifeTimeLabel;
@@ -19,6 +20,7 @@ public class StatisticBar extends JToolBar implements IUpdatable {
         controller.addListener(this);
         this.setFloatable(false);
 
+        this.daysLabel = new JLabel();
         this.animalsLabel = new JLabel();
         this.plantsLabel = new JLabel();
         this.avgLifeTimeLabel = new JLabel();
@@ -26,6 +28,8 @@ public class StatisticBar extends JToolBar implements IUpdatable {
         this.avgChildrenLabel = new JLabel();
         this.genotypeLabel = new JLabel();
 
+        this.add(this.daysLabel);
+        this.addSeparator();
         this.add(this.animalsLabel);
         this.addSeparator();
         this.add(this.plantsLabel);
@@ -43,6 +47,7 @@ public class StatisticBar extends JToolBar implements IUpdatable {
 
     public void update() {
         Statistic statistic = this.controller.getSimulation().dailyStatistic();
+        this.daysLabel.setText("Day: " + this.controller.getSimulation().getDay());
         this.animalsLabel.setText("Animals: " + statistic.counterAnimals);
         this.plantsLabel.setText("Plants: " + statistic.counterPlants);
         this.avgLifeTimeLabel.setText("Avg. lifetime: " + statistic.avgLifeTime);

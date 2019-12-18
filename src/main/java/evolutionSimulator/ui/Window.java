@@ -1,10 +1,8 @@
 package evolutionSimulator.ui;
 
-import evolutionSimulator.Simulation;
 import evolutionSimulator.SimulationConfig;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Window extends JFrame {
     public Window(SimulationConfig config) {
@@ -12,15 +10,11 @@ public class Window extends JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        SimulationController simulationController = new SimulationController(config);
+        JTabbedPane simulationTabs = new JTabbedPane();
+        simulationTabs.add("Map 1", new SimulationTab(config));
+        simulationTabs.add("Map 2", new SimulationTab(config));
 
-        Menu menu = new Menu(simulationController);
-        StatisticBar statisticBar = new StatisticBar(simulationController);
-        Board board = new Board(simulationController);
-
-        this.add(menu, BorderLayout.PAGE_START);
-        this.add(statisticBar, BorderLayout.PAGE_END);
-        this.add(board);
+        this.add(simulationTabs);
 
         this.setVisible(true);
     }

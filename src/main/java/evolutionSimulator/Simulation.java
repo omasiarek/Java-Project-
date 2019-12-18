@@ -146,4 +146,8 @@ public class Simulation {
     public WorldMap getMap() {
         return map;
     }
+
+    public int getDay() {
+        return this.counterOfDays;
+    }
 }
