@@ -2,10 +2,8 @@ package evolutionSimulator.objects;
 
 import evolutionSimulator.Generator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Genotype {
     private ArrayList<Integer> genotypeArray;
@@ -94,7 +92,16 @@ public class Genotype {
 
     @Override
     public String toString() {
-        return genotypeArray.toString();
+        return genotypeArray.stream()
+                .map(gen -> gen.toString())
+                .collect(Collectors.joining(""));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genotype genotype = (Genotype) o;
+        return Objects.equals(genotypeArray, genotype.genotypeArray);
+    }
 }

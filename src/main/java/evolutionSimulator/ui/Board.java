@@ -3,6 +3,7 @@ package evolutionSimulator.ui;
 import evolutionSimulator.fields.Vector2d;
 import evolutionSimulator.map.WorldMap;
 import evolutionSimulator.objects.Animal;
+import evolutionSimulator.objects.Genotype;
 import evolutionSimulator.objects.IMapElement;
 import evolutionSimulator.objects.Plant;
 
@@ -13,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Board extends JPanel implements IUpdatable {
+    SimulationController controller;
     WorldMap map;
     Map<Vector2d, JLabel> labelByPosition = new LinkedHashMap<>();
 
     public Board(SimulationController controller) {
+        this.controller = controller;
         controller.addListener(this);
         this.map = controller.getMap();
         Vector2d dimension = map.getDimension();
@@ -34,24 +37,29 @@ public class Board extends JPanel implements IUpdatable {
     }
 
     public void update() {
+        Genotype dominantGenotype = this.controller.getSimulation().dailyStatistic().genotype;
         for (Map.Entry<Vector2d, JLabel> positionWithLabel : labelByPosition.entrySet()) {
             Vector2d position = positionWithLabel.getKey();
             JLabel label = positionWithLabel.getValue();
 
             List<IMapElement> elements = this.map.getElementsPerField(position);
-            label.setBackground(this.colorForElements(elements));
+            label.setBackground(this.colorForElements(elements, dominantGenotype));
             label.setOpaque(true);
             label.setToolTipText(this.labelForElements(elements));
 
         }
     }
 
-    private Color colorForElements(List<IMapElement> elements) {
+    private Color colorForElements(List<IMapElement> elements, Genotype dominantGenotype) {
         if (elements.size() == 1) {
             IMapElement element = elements.get(0);
             if (element instanceof Plant) {
                 return Color.green;
             } else if (element instanceof Animal) {
+                Animal animal = (Animal) element;
+                if (animal.getGenotype().equals(dominantGenotype)) {
+                    return Color.blue;
+                }
                 return Color.orange;
             }
         } else if (elements.size() > 1) {
