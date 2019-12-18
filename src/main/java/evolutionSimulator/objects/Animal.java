@@ -5,12 +5,16 @@ import evolutionSimulator.fields.MapDirection;
 import evolutionSimulator.fields.Vector2d;
 import evolutionSimulator.map.WorldMap;
 
+import java.util.List;
+
 public class Animal implements IMapElement, Comparable<Animal> {
     private MapDirection direction;
     private Vector2d position;
     private WorldMap map;
     private int energy;
     private Genotype genotype;
+    private int age = 0;
+    private List<Animal> children;
 
 
     public Animal(WorldMap map, Vector2d position, int energy) {
@@ -49,8 +53,10 @@ public class Animal implements IMapElement, Comparable<Animal> {
         this.energy -= quaterEnergy();
         otherAnimal.energy -= otherAnimal.quaterEnergy();
         Genotype genotype = this.genotype.generateNewGenotype(otherAnimal.genotype);
-        return new Animal(this.map, childVector, childEnergy, genotype);
-
+        Animal child = new Animal(this.map, childVector, childEnergy, genotype);
+        this.children.add(child);
+        otherAnimal.children.add(child);
+        return child;
     }
 
     @Override
@@ -75,6 +81,22 @@ public class Animal implements IMapElement, Comparable<Animal> {
     @Override
     public int compareTo(Animal otherAnimal) {
         return (-1) * Integer.compare(this.energy, otherAnimal.energy);
+    }
+
+    public void addAge () {
+        this.age++;
+    }
+
+    public int getChildren() {
+        return children.size();
+    }
+
+    public int getAge() {
+        return this.age;
+    }
+
+    public Genotype getGenotype() {
+        return this.genotype;
     }
 }
 

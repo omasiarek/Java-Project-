@@ -3,22 +3,27 @@ package evolutionSimulator;
 import evolutionSimulator.fields.Vector2d;
 import evolutionSimulator.map.WorldMap;
 import evolutionSimulator.objects.Animal;
+import evolutionSimulator.objects.Genotype;
 import evolutionSimulator.objects.Plant;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Simulation {
     private final SimulationConfig config;
     private WorldMap map;
     private int counterOfDays;
+    private List<Statistic> statistics;
+    private List<Integer> lifeTime;
 
     public Simulation(SimulationConfig config) {
         this.config = config;
         this.map = new WorldMap(config.width, config.height, config.jungleRatio);
         this.counterOfDays = 1;
+        this.statistics = new LinkedList<>();
+        this.lifeTime = new LinkedList<>();
+
 
         for (int i = 0; i < config.initialAnimals; i++) {
             List<Vector2d> freePositions = map.getFreePlaceAtMap();
@@ -32,6 +37,7 @@ public class Simulation {
         List<Animal> animals = map.getAnimals();
         for (Animal animal : animals) {
             if (!animal.isAlive())
+                lifeTime.add(animal.getAge());
                 map.removeElement(animal);
         }
     }
@@ -40,6 +46,9 @@ public class Simulation {
         List<Animal> animals = map.getAnimals();
         for (Animal animal : animals) {
             animal.move(this.config.moveEnergy);
+            if(animal.isAlive()){
+                animal.addAge();
+            }
         }
     }
 
@@ -50,9 +59,11 @@ public class Simulation {
             Collections.sort(animals);
             if (animals.size() != 0) {
                 int i = 1;
-                while (i<animals.size() && animals.get(i).getEnergy() == animals.get(0).getEnergy()) {
+                while (animals.get(i).isAlive() && i<animals.size() && animals.get(i).getEnergy() == animals.get(0).getEnergy()) {
                     i++;
                 }
+                if(i==1 && !animals.get(0).isAlive() )
+                    continue;
                 int energy = this.config.plantEnergy / i;
                 for (int j = 0; j < i; j++) {
                     animals.get(j).addEnergy(energy);
@@ -103,6 +114,32 @@ public class Simulation {
         this.multiplication();
         this.putPlants();
         counterOfDays++;
+        this.statistics.add(this.dailyStatistic());
+    }
+
+    public Statistic dailyStatistic () {
+        int animals = map.getAnimals().size();
+        int plants = map.getPlants().size();
+        int avgCurrentEnergy = (int) Math.round(
+                map.getAnimals().stream()
+                    .collect(Collectors.averagingInt(animal -> animal.getEnergy()))
+        );
+        int children = (int) Math.round(
+                map.getAnimals().stream()
+                        .collect(Collectors.averagingInt(animal -> animal.getChildren()))
+        );
+        int avgLifeTime = (int) Math.round(
+                this.lifeTime.stream()
+                        .collect(Collectors.averagingInt(lifetime -> lifetime))
+        );
+        Genotype genotype = map.getAnimals().stream()
+                .map(animal -> animal.getGenotype())
+                .collect(Collectors.groupingBy(g -> g, Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(genotypeWithCount -> genotypeWithCount.getKey())
+                .orElse(null);
+        return new Statistic(animals, plants, genotype, avgLifeTime, avgCurrentEnergy, children);
     }
 
     public WorldMap getMap() {
