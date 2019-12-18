@@ -1,3 +1,12 @@
+package evolutionSimulator.map;
+
+import evolutionSimulator.Generator;
+import evolutionSimulator.fields.MapDirection;
+import evolutionSimulator.fields.Vector2d;
+import evolutionSimulator.objects.Animal;
+import evolutionSimulator.objects.IMapElement;
+import evolutionSimulator.objects.Plant;
+
 import java.util.*;
 
 public class WorldMap {
@@ -77,6 +86,13 @@ public class WorldMap {
         return animals;
     }
 
+    public List<IMapElement> getElementsPerField(Vector2d vector) {
+        if (!this.map.containsKey(vector)) {
+            return new LinkedList<>();
+        }
+        return this.map.get(vector);
+    }
+
     public Vector2d placeForChild(Vector2d vector) {
         List<Vector2d> places = new LinkedList<>();
         for (int i = 0; i <= 7; i++) {
@@ -120,5 +136,9 @@ public class WorldMap {
 
     public List<Vector2d> getFreePlaceAtJungle() {
         return freePlaceAtJungle;
+    }
+
+    public Vector2d getDimension() {
+        return new Vector2d(this.width, this.height);
     }
 }

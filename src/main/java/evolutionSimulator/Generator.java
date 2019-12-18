@@ -1,3 +1,5 @@
+package evolutionSimulator;
+
 import java.util.Random;
 
 public class Generator {

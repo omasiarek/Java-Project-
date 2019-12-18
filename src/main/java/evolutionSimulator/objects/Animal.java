@@ -1,4 +1,9 @@
+package evolutionSimulator.objects;
 
+import evolutionSimulator.Generator;
+import evolutionSimulator.fields.MapDirection;
+import evolutionSimulator.fields.Vector2d;
+import evolutionSimulator.map.WorldMap;
 
 public class Animal implements IMapElement, Comparable<Animal> {
     private MapDirection direction;
@@ -6,7 +11,7 @@ public class Animal implements IMapElement, Comparable<Animal> {
     private WorldMap map;
     private int energy;
     private static int ENERGYTOMULTIPLICATION = 10;
-    private static int ENERGYTOMOVE = 10;
+    private static int ENERGYTOMOVE = 2;
     private Genotype genotype;
 
 

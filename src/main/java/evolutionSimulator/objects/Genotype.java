@@ -1,3 +1,7 @@
+package evolutionSimulator.objects;
+
+import evolutionSimulator.Generator;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;

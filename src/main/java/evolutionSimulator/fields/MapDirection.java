@@ -1,3 +1,5 @@
+package evolutionSimulator.fields;
+
 public enum MapDirection {
     UP,
     UPRIGHT,

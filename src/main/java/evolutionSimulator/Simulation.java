@@ -1,14 +1,26 @@
+package evolutionSimulator;
+
+import evolutionSimulator.fields.Vector2d;
+import evolutionSimulator.map.WorldMap;
+import evolutionSimulator.objects.Animal;
+import evolutionSimulator.objects.Plant;
+
 import java.util.Collections;
 import java.util.List;
 
 
-public class Era {
+public class Simulation {
     private WorldMap map;
     private int counterOfDays;
 
-    public Era(WorldMap map) {
-        this.map = map;
+    public Simulation() {
+        this.map = new WorldMap(25, 50, 0.2);
         this.counterOfDays = 1;
+
+        this.map.addElement(new Animal(this.map, new Vector2d(1, 1), 40));
+        this.map.addElement(new Animal(this.map, new Vector2d(4, 4), 40));
+        this.map.addElement(new Animal(this.map, new Vector2d(5, 4), 40));
+        this.map.addElement(new Animal(this.map, new Vector2d(10, 11), 40));
     }
 
     public void deleteDeathAnimals() {
@@ -84,5 +96,9 @@ public class Era {
         this.multiplication();
         this.putPlants();
         counterOfDays++;
+    }
+
+    public WorldMap getMap() {
+        return map;
     }
 }

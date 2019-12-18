@@ -1,3 +1,7 @@
+package evolutionSimulator.map;
+
+import evolutionSimulator.fields.Vector2d;
+
 import static java.lang.Math.ceil;
 
 public class Jungle {
