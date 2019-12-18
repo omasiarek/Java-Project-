@@ -49,14 +49,15 @@ public class WorldMap {
     }
 
     public void removeElement(IMapElement element) {
-        List<IMapElement> elements = map.get(element.getPosition());
+        Vector2d position = element.getPosition();
+        List<IMapElement> elements = map.get(position);
         elements.remove(element);
         if (elements.isEmpty()) {
-            if (jungle.isInJungle(element.getPosition()))
-                freePlaceAtJungle.add(element.getPosition());
+            if (jungle.isInJungle(position))
+                freePlaceAtJungle.add(position);
             else
-                freePlaceAtDesert.add(element.getPosition());
-            map.remove(element.getPosition());
+                freePlaceAtDesert.add(position);
+            map.remove(position);
         }
     }
 
@@ -78,14 +79,17 @@ public class WorldMap {
     }
 
     public Vector2d placeForChild(Vector2d vector) {
+        List<Vector2d> places = new LinkedList<>();
         for (int i = 0; i <= 7; i++) {
             Vector2d childVector = vector.add(PARSER.parseToMapDirection(i).toUnitVector());
             childVector = this.placeAtMap(childVector);
             if (!this.isOccupied(childVector)) {
-                return childVector;
+                places.add(childVector);
             }
         }
-        return null;
+        if(places.isEmpty())
+             return null;
+        return places.get(Generator.GENERATOR.nextInt(places.size()));
     }
 
     public List<Plant> getPlants() {
@@ -102,8 +106,8 @@ public class WorldMap {
     public Vector2d placeAtMap(Vector2d vector) {
         if (vector.x < width && vector.x >= 0 && vector.y < height && vector.y >= 0)
             return vector;
-        int x = vector.x % width;
-        int y = vector.y % height;
+        int x = (width + vector.x) % width;
+        int y = (height + vector.y) % height;
         return new Vector2d(x, y);
     }
 

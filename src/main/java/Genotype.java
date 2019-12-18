@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Genotype {
     private ArrayList<Integer> genotypeArray;
@@ -69,11 +70,13 @@ public class Genotype {
 
         for (int i=0; i<8; i++){
             if (direction[i] == 0) {
-                int position = Generator.GENERATOR.nextInt(8);
-                while (direction[position]==0 || direction[position]==1) {
-                    position = Generator.GENERATOR.nextInt(8);
+                List<Integer> currentDirections = new LinkedList<>();
+                for (int j=0; j<8; j++){
+                    if (direction[j]>1)
+                        currentDirections.add(j);
                 }
-                direction[position]--;
+                int position = Generator.GENERATOR.nextInt(currentDirections.size());
+                direction[currentDirections.get(position)]--;
                 direction[i]++;
             }
         }
@@ -90,7 +93,4 @@ public class Genotype {
         return genotypeArray.toString();
     }
 
-    public ArrayList<Integer> getGenotypeArray() {
-        return genotypeArray;
-    }
 }

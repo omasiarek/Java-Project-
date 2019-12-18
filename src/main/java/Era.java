@@ -1,5 +1,5 @@
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static java.lang.Math.floor;
 
@@ -30,12 +30,13 @@ public class Era {
         List<Plant> plants = map.getPlants();
         for (Plant plant : plants) {
             List<Animal> animals = map.getAnimalsPerField(plant.getPosition());
+            Collections.sort(animals);
             if (animals.size() != 0) {
                 int i = 1;
-                while (animals.get(i).getEnergy() == animals.get(0).getEnergy()) {
+                while (i<animals.size() && animals.get(i).getEnergy() == animals.get(0).getEnergy()) {
                     i++;
                 }
-                int energy = (int) floor(Plant.ENERGY / i);
+                int energy = Plant.ENERGY / i;
                 for (int j = 0; j < i; j++) {
                     animals.get(j).addEnergy(energy);
                 }
@@ -51,6 +52,7 @@ public class Era {
             List<Animal> animals = map.getAnimalsPerField(vector);
             if (animals.size() < 2)
                 return;
+            Collections.sort(animals);
             Animal firstParent = animals.get(0);
             Animal secondParent = animals.get(1);
             if(firstParent.isCorrectEnergyToMultiplication() && secondParent.isCorrectEnergyToMultiplication()){
@@ -63,7 +65,6 @@ public class Era {
     public void putPlants() {
         List<Vector2d> desert = map.getFreePlaceAtDesert();
         List<Vector2d> jungle = map.getFreePlaceAtJungle();
-
         if (desert.size() > 0) {
             int index = Generator.GENERATOR.nextInt(desert.size());
             Plant plant = new Plant(desert.get(index));

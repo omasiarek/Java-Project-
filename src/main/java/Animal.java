@@ -1,4 +1,3 @@
-import java.util.Random;
 
 
 public class Animal implements IMapElement, Comparable<Animal> {
@@ -12,18 +11,17 @@ public class Animal implements IMapElement, Comparable<Animal> {
     private static OptionsParser PARSER = new OptionsParser();
 
 
-    public Animal(WorldMap map, Vector2d position) {
+    public Animal(WorldMap map, Vector2d position, int energy) {
         direction = new OptionsParser().parseToMapDirection(Generator.GENERATOR.nextInt(8));
         this.position = position;
         this.map = map;
-        this.energy = 0;
+        this.energy = energy;
         this.genotype = Genotype.generateNewGenotype();
     }
 
-    public Animal(WorldMap map, Vector2d position, int energy, Genotype firstParent, Genotype secondParent) {
-        this(map, position);
-        this.energy = energy;
-        this.genotype = firstParent.generateNewGenotype(secondParent);
+    public Animal(WorldMap map, Vector2d position, int energy, Genotype genotype) {
+        this(map, position, energy);
+        this.genotype = genotype;
     }
 
 
@@ -40,15 +38,16 @@ public class Animal implements IMapElement, Comparable<Animal> {
     }
 
 
-    public int quaterEnergy(int energy) {
-        return energy / 4;
+    public int quaterEnergy() {
+        return this.energy / 4;
     }
 
     public Animal multiplication(Animal otherAnimal, Vector2d childVector) {
-        int childEnergy = quaterEnergy(this.energy) + quaterEnergy(otherAnimal.energy);
-        this.energy -= quaterEnergy(this.energy);
-        otherAnimal.energy -= quaterEnergy(otherAnimal.energy);
-        return new Animal(this.map, childVector, childEnergy, this.genotype, otherAnimal.genotype);
+        int childEnergy = quaterEnergy() + otherAnimal.quaterEnergy();
+        this.energy -= quaterEnergy();
+        otherAnimal.energy -= otherAnimal.quaterEnergy();
+        Genotype genotype = this.genotype.generateNewGenotype(otherAnimal.genotype);
+        return new Animal(this.map, childVector, childEnergy, genotype);
 
     }
 
