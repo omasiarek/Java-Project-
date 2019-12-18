@@ -1,6 +1,6 @@
 public class Plant implements IMapElement {
-   private Vector2d position;
-   public static final int ENERGY = 10;
+    private Vector2d position;
+    public static final int ENERGY = 10;
 
 
     public Plant(Vector2d position) {

@@ -6,7 +6,6 @@ import static java.lang.Math.floor;
 
 public class Era {
     private WorldMap map;
-    private static Random GENERATOR = new Random();
 
     public Era(WorldMap map) {
         this.map = map;
@@ -54,8 +53,10 @@ public class Era {
                 return;
             Animal firstParent = animals.get(0);
             Animal secondParent = animals.get(1);
-            Animal child = firstParent.multiplication(secondParent, childVector);
-            map.addElement(child);
+            if(firstParent.isCorrectEnergyToMultiplication() && secondParent.isCorrectEnergyToMultiplication()){
+                Animal child = firstParent.multiplication(secondParent, childVector);
+                map.addElement(child);
+            }
         }
     }
 
@@ -64,12 +65,12 @@ public class Era {
         List<Vector2d> jungle = map.getFreePlaceAtJungle();
 
         if (desert.size() > 0) {
-            int index = GENERATOR.nextInt(desert.size());
+            int index = Generator.GENERATOR.nextInt(desert.size());
             Plant plant = new Plant(desert.get(index));
             map.addElement(plant);
         }
         if (jungle.size() > 0) {
-            int index = GENERATOR.nextInt(jungle.size());
+            int index = Generator.GENERATOR.nextInt(jungle.size());
             Plant plant = new Plant(jungle.get(index));
             map.addElement(plant);
         }
