@@ -39,21 +39,40 @@ public class Board extends JPanel implements IUpdatable {
             JLabel label = positionWithLabel.getValue();
 
             List<IMapElement> elements = this.map.getElementsPerField(position);
+            label.setBackground(this.colorForElements(elements));
+            label.setOpaque(true);
+            label.setToolTipText(this.labelForElements(elements));
 
-            label.setBackground(null);
-            if (elements.size() == 1) {
-                IMapElement element = elements.get(0);
-                if (element instanceof Plant) {
-                    label.setBackground(Color.green);
-                    label.setOpaque(true);
-                } else if (element instanceof Animal) {
-                    label.setBackground(Color.orange);
-                    label.setOpaque(true);
-                }
-            } else if (elements.size() > 1) {
-                label.setBackground(Color.red);
-                label.setOpaque(true);
-            }
         }
+    }
+
+    private Color colorForElements(List<IMapElement> elements) {
+        if (elements.size() == 1) {
+            IMapElement element = elements.get(0);
+            if (element instanceof Plant) {
+                return Color.green;
+            } else if (element instanceof Animal) {
+                return Color.orange;
+            }
+        } else if (elements.size() > 1) {
+            return Color.red;
+        }
+        return null;
+    }
+
+    private String labelForElements(List<IMapElement> elements) {
+        if (elements.size() == 1) {
+            IMapElement element = elements.get(0);
+            if (element instanceof Animal) {
+                Animal animal = (Animal) element;
+                return String.format(
+                        "Animal with %d energy",
+                        animal.getEnergy()
+                );
+            }
+        } else if (elements.size() > 1) {
+            return String.format("%d elements", elements.size());
+        }
+        return null;
     }
 }

@@ -17,13 +17,20 @@ public class Menu extends JToolBar {
         });
 
 
-        JButton hundredDays = new JButton("100 days");
-        hundredDays.addActionListener(event -> {
-            controller.hundredDays();
+        JButton skip1DayButton = new JButton("1 day");
+        skip1DayButton.addActionListener(event -> {
+            controller.skip1Day();
+        });
+
+
+        JButton skip100DaysButton = new JButton("100 days");
+        skip100DaysButton.addActionListener(event -> {
+            controller.skip100Days();
         });
 
         this.add(start);
         this.add(stop);
-        this.add(hundredDays);
+        this.add(skip1DayButton);
+        this.add(skip100DaysButton);
     }
 }

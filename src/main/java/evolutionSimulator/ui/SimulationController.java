@@ -17,10 +17,7 @@ public class SimulationController {
 
     public SimulationController(SimulationConfig config) {
         this.simulation = new Simulation(config);
-        this.timer = new Timer(20, event -> {
-            simulation.oneDay();
-            this.updateListeners();
-        });
+        this.timer = new Timer(20, event -> this.skip1Day());
     }
 
     public WorldMap getMap() {
@@ -46,7 +43,12 @@ public class SimulationController {
         this.timer.stop();
     }
 
-    public void hundredDays() {
+    public void skip1Day() {
+        simulation.oneDay();
+        this.updateListeners();
+    }
+
+    public void skip100Days() {
         for (int i = 0; i < 100; i++) {
             simulation.oneDay();
         }

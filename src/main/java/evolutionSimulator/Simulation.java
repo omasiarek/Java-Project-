@@ -5,6 +5,7 @@ import evolutionSimulator.map.WorldMap;
 import evolutionSimulator.objects.Animal;
 import evolutionSimulator.objects.Plant;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,13 +63,13 @@ public class Simulation {
     }
 
     public void multiplication() {
-        for (Vector2d vector : map.getOccupatedFields()) {
+        for (Vector2d vector : new ArrayList<>(map.getOccupatedFields())) {
             Vector2d childVector = map.placeForChild(vector);
             if (childVector == null)
-                return;
+                continue;
             List<Animal> animals = map.getAnimalsPerField(vector);
             if (animals.size() < 2)
-                return;
+                continue;
             Collections.sort(animals);
             Animal firstParent = animals.get(0);
             Animal secondParent = animals.get(1);
