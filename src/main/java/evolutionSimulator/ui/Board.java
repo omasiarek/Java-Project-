@@ -74,9 +74,10 @@ public class Board extends JPanel implements IUpdatable {
             if (element instanceof Animal) {
                 Animal animal = (Animal) element;
                 return String.format(
-                        "<html>Animal<br>Energy: %d<br>Genotype: %s</html>",
+                        "<html>Animal<br>Energy: %d<br>Genotype: %s<br>Children: %d</html>",
                         animal.getEnergy(),
-                        animal.getGenotype()
+                        animal.getGenotype(),
+                        animal.getChildren()
                 );
             }
         } else if (elements.size() > 1) {
