@@ -24,6 +24,10 @@ public class SimulationController {
         return this.simulation.getMap();
     }
 
+    public Simulation getSimulation() {
+        return this.simulation;
+    }
+
     public void addListener(IUpdatable listener) {
         this.listeners.add(listener);
     }

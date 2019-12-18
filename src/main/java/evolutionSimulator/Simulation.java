@@ -36,9 +36,10 @@ public class Simulation {
     public void deleteDeathAnimals() {
         List<Animal> animals = map.getAnimals();
         for (Animal animal : animals) {
-            if (!animal.isAlive())
+            if (!animal.isAlive()) {
                 lifeTime.add(animal.getAge());
                 map.removeElement(animal);
+            }
         }
     }
 
@@ -59,7 +60,7 @@ public class Simulation {
             Collections.sort(animals);
             if (animals.size() != 0) {
                 int i = 1;
-                while (animals.get(i).isAlive() && i<animals.size() && animals.get(i).getEnergy() == animals.get(0).getEnergy()) {
+                while (i<animals.size() && animals.get(i).isAlive() && animals.get(i).getEnergy() == animals.get(0).getEnergy()) {
                     i++;
                 }
                 if(i==1 && !animals.get(0).isAlive() )

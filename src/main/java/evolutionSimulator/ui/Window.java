@@ -15,9 +15,11 @@ public class Window extends JFrame {
         SimulationController simulationController = new SimulationController(config);
 
         Menu menu = new Menu(simulationController);
+        StatisticBar statisticBar = new StatisticBar(simulationController);
         Board board = new Board(simulationController);
 
         this.add(menu, BorderLayout.PAGE_START);
+        this.add(statisticBar, BorderLayout.PAGE_END);
         this.add(board);
 
         this.setVisible(true);

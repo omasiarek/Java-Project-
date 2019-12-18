@@ -5,6 +5,7 @@ import evolutionSimulator.fields.MapDirection;
 import evolutionSimulator.fields.Vector2d;
 import evolutionSimulator.map.WorldMap;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Animal implements IMapElement, Comparable<Animal> {
@@ -14,7 +15,7 @@ public class Animal implements IMapElement, Comparable<Animal> {
     private int energy;
     private Genotype genotype;
     private int age = 0;
-    private List<Animal> children;
+    private List<Animal> children = new LinkedList<>();
 
 
     public Animal(WorldMap map, Vector2d position, int energy) {
