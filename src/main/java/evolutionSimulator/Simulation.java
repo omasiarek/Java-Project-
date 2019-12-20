@@ -74,7 +74,7 @@ public class Simulation {
         }
     }
 
-    public void multiplication() {
+    public void reproduction() {
         for (Vector2d vector : new ArrayList<>(map.getOccupatedFields())) {
             Vector2d childVector = map.placeForChild(vector);
             if (childVector == null)
@@ -85,9 +85,9 @@ public class Simulation {
             Collections.sort(animals);
             Animal firstParent = animals.get(0);
             Animal secondParent = animals.get(1);
-            int multiplicationEnergy = this.config.startEnergy / 2;
-            if(firstParent.getEnergy() > multiplicationEnergy && secondParent.getEnergy() > multiplicationEnergy){
-                Animal child = firstParent.multiplication(secondParent, childVector);
+            int reproductionEnergy = this.config.startEnergy / 2;
+            if(firstParent.getEnergy() > reproductionEnergy && secondParent.getEnergy() > reproductionEnergy){
+                Animal child = firstParent.reproduction(secondParent, childVector);
                 map.addElement(child);
             }
         }
@@ -112,7 +112,7 @@ public class Simulation {
         this.deleteDeathAnimals();
         this.movingAnimal();
         this.eating();
-        this.multiplication();
+        this.reproduction();
         this.putPlants();
         counterOfDays++;
         this.statistics.add(this.dailyStatistic());

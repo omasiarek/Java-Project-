@@ -49,7 +49,7 @@ public class Animal implements IMapElement, Comparable<Animal> {
         return this.energy / 4;
     }
 
-    public Animal multiplication(Animal otherAnimal, Vector2d childVector) {
+    public Animal reproduction(Animal otherAnimal, Vector2d childVector) {
         int childEnergy = quaterEnergy() + otherAnimal.quaterEnergy();
         this.energy -= quaterEnergy();
         otherAnimal.energy -= otherAnimal.quaterEnergy();
