@@ -1,6 +1,6 @@
 # Java Project
 On the simulation: 
-animal with dominant genotype is blue,
-if on the field are several animals the field is red,
-one animal is orange, 
-plant is green. 
+the field is blue when there is animal with dominant genotype on it,
+the field is red when there are several animals on it,
+the field is orange when there is any animal on it,
+the fiels is green when there is a plant on it.
